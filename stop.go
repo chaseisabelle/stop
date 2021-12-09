@@ -24,7 +24,7 @@ func Listen() {
 
 	c := make(chan os.Signal)
 
-	signal.Notify(c, syscall.SIGINT, syscall.SIGKILL, syscall.SIGTERM)
+	signal.Notify(c, os.Interrupt, os.Kill, syscall.SIGTERM)
 
 	go func() {
 		s := <-c
@@ -34,9 +34,9 @@ func Listen() {
 		defer state.Unlock()
 
 		switch s {
-		case syscall.SIGINT:
+		case os.Interrupt:
 			state.interrupted = true
-		case syscall.SIGKILL:
+		case os.Kill:
 			state.killed = true
 		case syscall.SIGTERM:
 			state.terminated = true
